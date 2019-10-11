@@ -1,4 +1,4 @@
-# sgi
+# person
 
 ## Project setup
 ```
