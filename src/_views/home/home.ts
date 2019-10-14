@@ -1,7 +1,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { Action  } from 'vuex-class';
 import HttpClient from '@/_core/api/http-client';
-
+import { debounce } from 'lodash';
 
 @Component({
   components: {
@@ -15,6 +15,8 @@ export default class Home extends Vue {
     visible: false,
     data: {}
   };
+  private count = 0;
+  private searchInput = "";
 
   private rules = {
     first_name: [
@@ -38,6 +40,13 @@ export default class Home extends Vue {
     return date.getTime() > Date.now();
   }
 
+  private inputChange = debounce(this.search, 1000);
+
+  private search() {
+    this.persons = [];
+    this.load();
+  }
+
   mounted() {
     this.load();
   }
@@ -45,8 +54,9 @@ export default class Home extends Vue {
   private async load() {
     this.setLoading(true);
     try {
-      let data = await HttpClient.get("Person");
-      this.persons = data;
+      let data = await HttpClient.get(`Person/?offset=${this.persons.length}${this.searchInput ? `&search=${this.searchInput}` : ''}`);
+      this.count = data.count;
+      this.persons = data.results;
     } catch(err) {
       this.$message.error(err);
     } finally {

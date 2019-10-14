@@ -1,7 +1,16 @@
 <template>
   <el-row class="main">
-    <h2>List of Persons</h2>
-    <el-button @click="add" type="primary" icon="el-icon-plus" circle></el-button>
+    <el-row :gutter="20">
+      <el-col :span="18">
+        <h2>List of Persons</h2>
+        <el-tooltip content="Add" placement="right">
+          <el-button @click="add" type="primary" icon="el-icon-plus" circle></el-button>
+        </el-tooltip>
+      </el-col>
+      <el-col :span="6">
+        <el-input @input="inputChange" placeholder="Search" v-model="searchInput"></el-input>
+      </el-col>
+    </el-row>
     <el-table :data="persons" style="width: 100%">
       <el-table-column prop="first_name" label="First Name"/>
       <el-table-column prop="last_name" label="Last Name"/>
@@ -9,11 +18,22 @@
       <el-table-column prop="zip_code" label="Zip Code"/>
       <el-table-column label="Operations">
         <template slot-scope="scope">
-          <el-button @click="edit(scope.row)" type="warning" icon="el-icon-edit" circle></el-button>
-          <el-button @click="remove(scope.row.id)" type="danger" icon="el-icon-delete" circle></el-button>
+          <el-tooltip content="Edit" placement="top">
+            <el-button @click="edit(scope.row)" type="warning" icon="el-icon-edit" circle></el-button>
+          </el-tooltip>
+          <el-tooltip content="Delete" placement="top">
+            <el-button @click="remove(scope.row.id)" type="danger" icon="el-icon-delete" circle></el-button>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      class="paggination"
+      background
+      layout="prev, pager, next"
+      :total="count"
+      @current-change="load">
+    </el-pagination>
     <el-dialog
       title="Person"
       :visible.sync="dialog.visible"
