@@ -8,7 +8,6 @@ import Element from 'element-ui';
 import '@/_assets/element-variables.scss';
 import lang from 'element-ui/lib/locale/lang/en'
 import locale from 'element-ui/lib/locale'
-import '@/_components/_imports/font-awesome';
 
 Vue.config.productionTip = false;
 
