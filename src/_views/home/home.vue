@@ -11,11 +11,12 @@
         <el-input @input="inputChange" placeholder="Search" v-model="searchInput"></el-input>
       </el-col>
     </el-row>
-    <el-table :data="persons" style="width: 100%">
+    <el-table :data="persons.results" style="width: 100%">
       <el-table-column prop="first_name" label="First Name"/>
       <el-table-column prop="last_name" label="Last Name"/>
       <el-table-column prop="birth_date" label="Birth Date"/>
       <el-table-column prop="zip_code" label="Zip Code"/>
+      <el-table-column prop="phone_number" label="Phone Number"/>
       <el-table-column label="Operations">
         <template slot-scope="scope">
           <el-tooltip content="Edit" placement="top">
@@ -31,21 +32,22 @@
       class="paggination"
       background
       layout="prev, pager, next"
-      :total="count"
-      @current-change="load">
+      :total="persons.count"
+      @current-change="load"
+      :page-sizes="[10]">
     </el-pagination>
     <el-dialog
       title="Person"
       :visible.sync="dialog.visible"
       center>
       <el-form :model="dialog.data" :rules="rules" ref="form">
-        <el-form-item label="First Name" prop="first_name" required>
+        <el-form-item label="First Name" prop="first_name">
           <el-input v-model="dialog.data.first_name"></el-input>
         </el-form-item>
-        <el-form-item label="Last Name" prop="last_name" required>
+        <el-form-item label="Last Name" prop="last_name">
           <el-input v-model="dialog.data.last_name"></el-input>
         </el-form-item>
-        <el-form-item label="Birth Date" prop="birth_date" required>
+        <el-form-item label="Birth Date" prop="birth_date">
           <el-date-picker 
             value-format="yyyy-MM-dd" 
             type="date" 
@@ -55,8 +57,11 @@
             :picker-options="{ disabledDate: disabledDate }">
             </el-date-picker>
         </el-form-item>
-        <el-form-item label="Zip Code" prop="zip_code" required>
+        <el-form-item label="Zip Code" prop="zip_code">
           <el-input v-model="dialog.data.zip_code"></el-input>
+        </el-form-item>
+        <el-form-item label="Phone Number" prop="phone_number">
+          <el-input v-mask="'(###) ###-####'" placeholder="(###) ###-####" v-model="dialog.data.phone_number"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">

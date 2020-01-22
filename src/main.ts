@@ -3,18 +3,19 @@ import App from './App.vue';
 import router from '@/router';
 import store from '@/_store';
 import '@/registerServiceWorker';
-
+import { VueMaskDirective } from 'v-mask';
 import Element from 'element-ui';
-import lang from './utils/es';
-import locale from 'element-ui/lib/locale';
 import '@/_assets/element-variables.scss';
-
+import lang from 'element-ui/lib/locale/lang/en'
+import locale from 'element-ui/lib/locale'
 import '@/_components/_imports/font-awesome';
 
 Vue.config.productionTip = false;
-locale.use(lang)
 
+locale.use(lang)
 Vue.use(Element, { size: 'medium' });
+
+Vue.directive('mask', VueMaskDirective);
 
 new Vue({
   router,

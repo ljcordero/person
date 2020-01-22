@@ -12,7 +12,7 @@ const app = [
       title: "Person"
     }
   },
-  { // Dejar siempre de último
+  {
     path: '*',
     component: () => import('./_views/Error404.vue'),
   },

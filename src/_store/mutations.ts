@@ -3,6 +3,10 @@ import { MutationTree } from 'vuex';
 import {
   ERROR,
   LOADING,
+  FETCH_PERSONS,
+  ADD_PERSON,
+  UPDATE_PERSON,
+  DELETE_PERSON
 } from '@/_store/mutation-types';
 
 import State from '@/_store/state';
@@ -15,6 +19,18 @@ const mutations: MutationTree<State> = {
   },
   [LOADING](state: State, loading: boolean): void {
     state.loading = loading;
+  },
+  [FETCH_PERSONS](state: State, persons: any[]): void {
+    state.persons = persons;
+  },
+  [ADD_PERSON](state: State, person: any): void {
+    state.persons.results.push(person);
+  },
+  [UPDATE_PERSON](state: State, person: any): void {
+    state.persons.results[state.persons.results.findIndex(p => p.id == person.id)] = person;
+  },
+  [DELETE_PERSON](state: State, id: number): void {
+    state.persons.results.splice(state.persons.results.findIndex(p => p.id == id), 1);
   },
 };
 

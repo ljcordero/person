@@ -1,6 +1,5 @@
 import { Component, Vue } from 'vue-property-decorator';
-import { Action  } from 'vuex-class';
-import HttpClient from '@/_core/api/http-client';
+import { Action, Getter  } from 'vuex-class';
 import { debounce } from 'lodash';
 
 @Component({
@@ -8,14 +7,16 @@ import { debounce } from 'lodash';
   },
 })
 export default class Home extends Vue {
-  @Action setLoading: (loading: boolean) => void;
+  @Getter persons: any;
+  @Action fetchPersons: ({length, searchInput}: any) => Promise<void>;
+  @Action addPerson: (person: any) => Promise<void>;
+  @Action updatePerson: (person: any) => Promise<void>;
+  @Action deletePerson: (id: number) => Promise<void>;
 
-  private persons = [];
   private dialog: any = {
     visible: false,
     data: {}
   };
-  private count = 0;
   private searchInput = "";
 
   private rules = {
@@ -34,34 +35,23 @@ export default class Home extends Vue {
       { required: true, message: 'Please input Zip code', trigger: 'blur' },
       { min: 2, max: 100, message: 'Length should be 2 to 100', trigger: 'blur' }
     ],
+    phone_number: [
+      { required: true, message: 'Please input Phone Number', trigger: 'blur' },
+    ],
   }
 
   private disabledDate(date) {
     return date.getTime() > Date.now();
   }
 
-  private inputChange = debounce(this.search, 1000);
-
-  private search() {
-    this.persons = [];
-    this.load();
-  }
+  private inputChange = debounce(this.load, 1000);
 
   mounted() {
     this.load();
   }
 
-  private async load() {
-    this.setLoading(true);
-    try {
-      let data = await HttpClient.get(`Person/?offset=${this.persons.length}${this.searchInput ? `&search=${this.searchInput}` : ''}`);
-      this.count = data.count;
-      this.persons = data.results;
-    } catch(err) {
-      this.$message.error(err);
-    } finally {
-      this.setLoading(false);
-    }
+  private async load(currentPage = 1) {
+    this.fetchPersons({ length: (currentPage - 1)* 10, searchInput: this.searchInput });
   }
 
   private add() {
@@ -74,44 +64,39 @@ export default class Home extends Vue {
   private edit(row) {
     this.dialog = {
       visible: true,
-      data: row
+      data: {...row}
     };
   }
 
-  private async save() {
+  private save() {
     (this.$refs['form'] as any).validate(async (valid)=> {
       if (valid) {
-        try {
-          this.setLoading(true);
-          if(this.dialog.data.id) {
-            await HttpClient.put(`Person/${this.dialog.data.id}/`, this.dialog.data);
-          } else {
-            await HttpClient.post("Person/", this.dialog.data);
-          }
-          this.load();
-          this.dialog = {
-            visible: false,
-            data: {}
-          };
-        } catch(err) {
-          this.$message.error(err);
-        } finally {
-          this.setLoading(false);
+        if(this.dialog.data.id) {
+          this.updatePerson(this.dialog.data);
+        } else {
+          this.addPerson(this.dialog.data);
         }
+        this.dialog = {
+          visible: false,
+          data: {}
+        };
       }
     });
   }
 
-  private async remove(id) {
-    try {
-      this.setLoading(true);
-      await HttpClient.delete(`Person/${id}/`);
-    } catch(err) {
-      this.$message.error(err);
-    } finally {
-      this.setLoading(false);
-      this.load();
-    }
+  private remove(id) {
+    this.$confirm('Are you sure want delete this record?', 'Warning', {
+      confirmButtonText: 'OK',
+      cancelButtonText: 'Cancel',
+      type: 'warning'
+    }).then(() => {
+      this.deletePerson(id);
+    }).catch(() => {
+      this.$message({
+        type: 'info',
+        message: 'Delete canceled'
+      });          
+    }); 
   }
 
 }
