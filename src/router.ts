@@ -7,9 +7,17 @@ const app = [
   {
     name: 'home',
     path: '/',
-    component: () => import('./_views/home/home.vue'),
+    component: () => import('./_views/home/home'),
     meta: {
       title: "Person"
+    }
+  },
+  {
+    name: 'details',
+    path: '/details/:id',
+    component: () => import('./_views/details/details'),
+    meta: {
+      title: "Person Details"
     }
   },
   {

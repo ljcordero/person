@@ -3,6 +3,7 @@ import {
   LOADING,
   ERROR,
   FETCH_PERSONS,
+  FETCH_PERSON_BY_ID,
   ADD_PERSON,
   UPDATE_PERSON,
   DELETE_PERSON
@@ -24,6 +25,17 @@ const actions: ActionTree<State, State> = {
     try {
       let persons = await HttpClient.get(`Person/?offset=${length}${searchInput ? `&search=${searchInput}` : ''}`)
       commit(FETCH_PERSONS, persons);
+    } catch(err) {
+      commit(ERROR, err);
+    } finally {
+      commit(LOADING, false);
+    }
+  },
+  async fetchPersonById({commit}: ActionContext<State, State>, id: number): Promise<void> {
+    commit(LOADING, true);
+    try {
+      let persons = await HttpClient.get(`Person/${id}`)
+      commit(FETCH_PERSON_BY_ID, persons);
     } catch(err) {
       commit(ERROR, err);
     } finally {
@@ -62,7 +74,7 @@ const actions: ActionTree<State, State> = {
     } finally {
       commit(LOADING, false);
     }
-  }
+  },
 };
 
 export default actions;

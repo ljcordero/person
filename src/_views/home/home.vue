@@ -19,8 +19,13 @@
       <el-table-column prop="phone_number" label="Phone Number"/>
       <el-table-column label="Operations">
         <template slot-scope="scope">
+          <router-link :to="{ name: 'details', params: { id: scope.row.id, row: scope.row } }">
+            <el-tooltip content="Details" placement="top">
+              <el-button type="primary" icon="el-icon-view" circle></el-button>
+            </el-tooltip>
+          </router-link>
           <el-tooltip content="Edit" placement="top">
-            <el-button @click="edit(scope.row)" type="warning" icon="el-icon-edit" circle></el-button>
+            <el-button class="margin-left-10" @click="edit(scope.row)" type="warning" icon="el-icon-edit" circle></el-button>
           </el-tooltip>
           <el-tooltip content="Delete" placement="top">
             <el-button @click="remove(scope.row.id)" type="danger" icon="el-icon-delete" circle></el-button>
@@ -42,28 +47,40 @@
       :visible.sync="dialog.visible"
       center>
       <el-form :model="dialog.data" :rules="rules" ref="form">
-        <el-form-item label="First Name" prop="first_name">
-          <el-input v-model="dialog.data.first_name"></el-input>
-        </el-form-item>
-        <el-form-item label="Last Name" prop="last_name">
-          <el-input v-model="dialog.data.last_name"></el-input>
-        </el-form-item>
-        <el-form-item label="Birth Date" prop="birth_date">
-          <el-date-picker 
-            value-format="yyyy-MM-dd" 
-            type="date" 
-            placeholder="Pick a date" 
-            v-model="dialog.data.birth_date" 
-            style="width:100%"
-            :picker-options="{ disabledDate: disabledDate }">
-            </el-date-picker>
-        </el-form-item>
-        <el-form-item label="Zip Code" prop="zip_code">
-          <el-input v-model="dialog.data.zip_code"></el-input>
-        </el-form-item>
-        <el-form-item label="Phone Number" prop="phone_number">
-          <el-input v-mask="'(###) ###-####'" placeholder="(###) ###-####" v-model="dialog.data.phone_number"></el-input>
-        </el-form-item>
+        <el-row :gutter="20">
+          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+            <el-form-item label="First Name" prop="first_name">
+              <el-input v-model="dialog.data.first_name"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+            <el-form-item label="Last Name" prop="last_name">
+              <el-input v-model="dialog.data.last_name"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="24" :md="12" :lg="8" :xl="8">
+            <el-form-item label="Birth Date" prop="birth_date">
+              <el-date-picker 
+                value-format="yyyy-MM-dd" 
+                type="date" 
+                placeholder="Pick a date" 
+                v-model="dialog.data.birth_date" 
+                style="width:100%"
+                :picker-options="{ disabledDate: disabledDate }">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="24" :md="12" :lg="8" :xl="8">
+            <el-form-item label="Zip Code" prop="zip_code">
+              <el-input v-model="dialog.data.zip_code"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="24" :md="12" :lg="8" :xl="8">
+            <el-form-item label="Phone Number" prop="phone_number">
+              <el-input v-mask="'(###) ###-####'" placeholder="(###) ###-####" v-model="dialog.data.phone_number"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialog.visible = false">Cancel</el-button>

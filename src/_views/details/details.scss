@@ -1,0 +1,28 @@
+.main {
+  min-height: 100vh;
+  width: 100vw;
+  background: radial-gradient(#b3b3b3, #c0c0c0);
+  padding: 20px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .main-row {
+    width: 70%;
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+  }
+
+}
+
+.group {
+  display: flex; 
+  flex-direction: column; 
+  margin-bottom: 10px;
+
+  .title {
+    font-weight: bold; 
+    font-size: 15px;
+  }
+}

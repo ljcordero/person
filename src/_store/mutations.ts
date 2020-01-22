@@ -4,6 +4,7 @@ import {
   ERROR,
   LOADING,
   FETCH_PERSONS,
+  FETCH_PERSON_BY_ID,
   ADD_PERSON,
   UPDATE_PERSON,
   DELETE_PERSON
@@ -22,6 +23,10 @@ const mutations: MutationTree<State> = {
   },
   [FETCH_PERSONS](state: State, persons: any[]): void {
     state.persons = persons;
+  },
+  [FETCH_PERSON_BY_ID](state: State, person: any): void {
+    if(!state.persons.results) state.persons.results = [];
+    state.persons.results.push(person);
   },
   [ADD_PERSON](state: State, person: any): void {
     state.persons.results.push(person);
