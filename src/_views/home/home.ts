@@ -18,7 +18,7 @@ export default class Home extends Vue {
     data: {}
   };
   private searchInput = "";
-
+  private currentPage = 1;
   private rules = {
     first_name: [
       { required: true, message: 'Please input First name', trigger: 'blur' },
@@ -50,8 +50,8 @@ export default class Home extends Vue {
     this.load();
   }
 
-  private async load(currentPage = 1) {
-    this.fetchPersons({ length: (currentPage - 1)* 10, searchInput: this.searchInput });
+  private load() {
+    this.fetchPersons({ length: (this.currentPage - 1) * 10, searchInput: this.searchInput });
   }
 
   private add() {
@@ -90,7 +90,15 @@ export default class Home extends Vue {
       cancelButtonText: 'Cancel',
       type: 'warning'
     }).then(() => {
-      this.deletePerson(id);
+      this.deletePerson(id).then(_ => {
+        if(this.persons.next) {
+          this.load();
+        }
+        if(this.persons.results.length == 0 && this.persons.count > 0) {
+          this.currentPage--;
+          this.load();
+        }
+      });
     }).catch(() => {
       this.$message({
         type: 'info',

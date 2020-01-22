@@ -1,11 +1,9 @@
 import axios from 'axios';
 
 export class HttpClient {
-  private baseURL: string;
   private axios: any;
 
   constructor(baseURL: string) {
-    this.baseURL = baseURL;
     this.axios = axios.create({
       baseURL,
       headers: { 'Content-Type': 'application/json' }

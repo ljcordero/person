@@ -33,6 +33,7 @@
       background
       layout="prev, pager, next"
       :total="persons.count"
+      :current-page.sync="currentPage"
       @current-change="load"
       :page-sizes="[10]">
     </el-pagination>
