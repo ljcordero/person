@@ -13,10 +13,20 @@ export default class Home extends Vue {
   @Action updatePerson: (person: any) => Promise<void>;
   @Action deletePerson: (id: number) => Promise<void>;
 
-  private dialog: any = {
+  private formDialog: any = {
     visible: false,
     data: {}
   };
+  private detailsDialog: any = {
+    visible: false,
+    data: {}
+  }
+  private props: any[] = [
+    { label: "First Name", name: "first_name" },
+    { label: "Last Name", name: "last_name" },
+    { label: "Birth Date", name: "birth_date" },
+    { label: "Phone Number", name: "phone_number" },
+  ]
   private searchInput = "";
   private currentPage = 1;
   private rules = {
@@ -55,28 +65,35 @@ export default class Home extends Vue {
   }
 
   private add() {
-    this.dialog = {
+    this.formDialog = {
       visible: true,
       data: {}
     };
   }
 
   private edit(row) {
-    this.dialog = {
+    this.formDialog = {
       visible: true,
       data: {...row}
+    };
+  }
+
+  private details(row) {
+    this.detailsDialog = {
+      visible: true,
+      data: row
     };
   }
 
   private save() {
     (this.$refs['form'] as any).validate(async (valid)=> {
       if (valid) {
-        if(this.dialog.data.id) {
-          this.updatePerson(this.dialog.data);
+        if(this.formDialog.data.id) {
+          this.updatePerson(this.formDialog.data);
         } else {
-          this.addPerson(this.dialog.data);
+          this.addPerson(this.formDialog.data);
         }
-        this.dialog = {
+        this.formDialog = {
           visible: false,
           data: {}
         };

@@ -13,14 +13,6 @@ const app = [
     }
   },
   {
-    name: 'details',
-    path: '/details/:id',
-    component: () => import('./_views/details/details'),
-    meta: {
-      title: "Person Details"
-    }
-  },
-  {
     path: '*',
     component: () => import('./_views/Error404.vue'),
   },
