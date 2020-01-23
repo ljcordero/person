@@ -27,9 +27,9 @@ export default class Home extends Vue {
     { label: "Birth Date", name: "birth_date" },
     { label: "Phone Number", name: "phone_number" },
   ]
-  private searchInput = "";
-  private currentPage = 1;
-  private rules = {
+  private searchInput: string = "";
+  private currentPage: number = 1;
+  private rules: any = {
     first_name: [
       { required: true, message: 'Please input First name', trigger: 'blur' },
       { min: 3, max: 200, message: 'Length should be 3 to 200', trigger: 'blur' }
@@ -54,9 +54,18 @@ export default class Home extends Vue {
     return date.getTime() > Date.now();
   }
 
-  private inputChange = debounce(this.load, 1000);
+  private inputChange = debounce(this.search, 1000);
 
   mounted() {
+    if(this.$route.query.search) {
+      this.searchInput = this.$route.query.search as string;
+    }
+    this.load();
+  }
+
+  private search() {
+    this.currentPage = 1;
+    this.$router.replace({ name: "home", query: {search: this.searchInput} });
     this.load();
   }
 
