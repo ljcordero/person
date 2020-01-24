@@ -3,7 +3,7 @@
     <el-row :gutter="20">
       <el-col :span="18">
         <h2>List of Persons</h2>
-        <el-tooltip content="Add" placement="right">
+        <el-tooltip :open-delay="100" content="Add" placement="right">
           <el-button @click="add" type="primary" icon="el-icon-plus" circle></el-button>
         </el-tooltip>
       </el-col>
@@ -18,13 +18,13 @@
       <el-table-column prop="phone_number" label="Phone Number"/>
       <el-table-column label="Operations">
         <template slot-scope="scope">
-          <el-tooltip content="Details" placement="top">
+          <el-tooltip :open-delay="100" content="Details" placement="top">
             <el-button @click="details(scope.row)" type="primary" icon="el-icon-view" circle></el-button>
           </el-tooltip>
-          <el-tooltip content="Edit" placement="top">
+          <el-tooltip :open-delay="100" content="Edit" placement="top">
             <el-button @click="edit(scope.row)" type="warning" icon="el-icon-edit" circle></el-button>
           </el-tooltip>
-          <el-tooltip content="Delete" placement="top">
+          <el-tooltip :open-delay="100" content="Delete" placement="top">
             <el-button @click="remove(scope.row.id)" type="danger" icon="el-icon-delete" circle></el-button>
           </el-tooltip>
         </template>
