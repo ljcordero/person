@@ -1,6 +1,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { Action, Getter } from 'vuex-class';
 import { debounce } from 'lodash';
+import Person from '@/_core/models/Person';
 
 @Component({
   components: {
@@ -9,8 +10,8 @@ import { debounce } from 'lodash';
 export default class Home extends Vue {
   @Getter persons: any;
   @Action fetchPersons: ({ length, searchInput }: any) => Promise<void>;
-  @Action addPerson: (person: any) => Promise<void>;
-  @Action updatePerson: (person: any) => Promise<void>;
+  @Action addPerson: (person: Person) => Promise<void>;
+  @Action updatePerson: (person: Person) => Promise<void>;
   @Action deletePerson: (id: number) => Promise<void>;
 
   private formDialog: any = {
@@ -105,9 +106,9 @@ export default class Home extends Vue {
     (this.$refs['form'] as any).validate(async (valid) => {
       if (valid) {
         if (this.formDialog.data.id) {
-          this.updatePerson(this.formDialog.data);
+          this.updatePerson(new Person(this.formDialog.data));
         } else {
-          this.addPerson(this.formDialog.data);
+          this.addPerson(new Person(this.formDialog.data));
         }
         this.formDialog = {
           visible: false,

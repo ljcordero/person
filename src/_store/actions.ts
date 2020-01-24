@@ -3,7 +3,6 @@ import {
   LOADING,
   ERROR,
   FETCH_PERSONS,
-  FETCH_PERSON_BY_ID,
   ADD_PERSON,
   UPDATE_PERSON,
   DELETE_PERSON
@@ -11,6 +10,7 @@ import {
 
 import State from '@/_store/state';
 import HttpClient from '@/_core/api/http-client';
+import Person from '@/_core/models/Person';
 
 // ActionTree<[current state], [root state]>
 const actions: ActionTree<State, State> = {
@@ -24,6 +24,7 @@ const actions: ActionTree<State, State> = {
     commit(LOADING, true);
     try {
       let persons = await HttpClient.get(`Person/?offset=${length}${searchInput ? `&search=${searchInput}` : ''}`)
+      persons.results = persons.results.map(r => new Person(r));
       commit(FETCH_PERSONS, persons);
     } catch(err) {
       commit(ERROR, err);
@@ -31,18 +32,7 @@ const actions: ActionTree<State, State> = {
       commit(LOADING, false);
     }
   },
-  async fetchPersonById({commit}: ActionContext<State, State>, id: number): Promise<void> {
-    commit(LOADING, true);
-    try {
-      let persons = await HttpClient.get(`Person/${id}`)
-      commit(FETCH_PERSON_BY_ID, persons);
-    } catch(err) {
-      commit(ERROR, err);
-    } finally {
-      commit(LOADING, false);
-    }
-  },
-  async addPerson({commit}: ActionContext<State, State>, person: any): Promise<void> {
+  async addPerson({commit}: ActionContext<State, State>, person: Person): Promise<void> {
     commit(LOADING, true);
     try {
       let result = await HttpClient.post("Person/", person);
@@ -53,7 +43,7 @@ const actions: ActionTree<State, State> = {
       commit(LOADING, false);
     }
   },
-  async updatePerson({commit}: ActionContext<State, State>, person: any): Promise<void> {
+  async updatePerson({commit}: ActionContext<State, State>, person: Person): Promise<void> {
     commit(LOADING, true);
     try {
       let result = await HttpClient.put(`Person/${person.id}/`, person);

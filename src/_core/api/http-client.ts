@@ -7,7 +7,15 @@ export class HttpClient {
     this.axios = axios.create({
       baseURL,
       headers: { 'Content-Type': 'application/json' }
-    })
+    });
+
+    this.axios.interceptors.response.use(res => res, err => {
+      let error = err;
+      if(error.response && error.response.data) {
+        error = Object.keys(error.response.data).map(k => `${k}: ${error.response.data[k]}`).join('\n');
+      }
+      return Promise.reject(error);
+    });
   }
 
   public get(endpoint: string, query: any | string = ""): Promise<any> {

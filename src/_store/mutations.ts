@@ -4,13 +4,14 @@ import {
   ERROR,
   LOADING,
   FETCH_PERSONS,
-  FETCH_PERSON_BY_ID,
   ADD_PERSON,
   UPDATE_PERSON,
   DELETE_PERSON
 } from '@/_store/mutation-types';
 
 import State from '@/_store/state';
+import Person from '@/_core/models/Person';
+import Vue from 'vue';
 
 const mutations: MutationTree<State> = {
   /* APP */
@@ -24,15 +25,11 @@ const mutations: MutationTree<State> = {
   [FETCH_PERSONS](state: State, persons: any[]): void {
     state.persons = persons;
   },
-  [FETCH_PERSON_BY_ID](state: State, person: any): void {
-    if(!state.persons.results) state.persons.results = [];
+  [ADD_PERSON](state: State, person: Person): void {
     state.persons.results.push(person);
   },
-  [ADD_PERSON](state: State, person: any): void {
-    state.persons.results.push(person);
-  },
-  [UPDATE_PERSON](state: State, person: any): void {
-    state.persons.results[state.persons.results.findIndex(p => p.id == person.id)] = person;
+  [UPDATE_PERSON](state: State, person: Person): void {
+    Vue.set(state.persons.results, state.persons.results.findIndex(p => p.id == person.id), person);
   },
   [DELETE_PERSON](state: State, id: number): void {
     state.persons.results.splice(state.persons.results.findIndex(p => p.id == id), 1);
