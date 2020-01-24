@@ -42,7 +42,8 @@
     <el-dialog
       title="Person"
       :visible.sync="formDialog.visible"
-      center>
+      center
+      @open="() => this.$refs['form'].resetFields()">
       <el-form :model="formDialog.data" :rules="rules" ref="form">
         <el-row :gutter="20">
           <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
