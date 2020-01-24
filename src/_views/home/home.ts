@@ -1,5 +1,5 @@
 import { Component, Vue } from 'vue-property-decorator';
-import { Action, Getter  } from 'vuex-class';
+import { Action, Getter } from 'vuex-class';
 import { debounce } from 'lodash';
 
 @Component({
@@ -8,7 +8,7 @@ import { debounce } from 'lodash';
 })
 export default class Home extends Vue {
   @Getter persons: any;
-  @Action fetchPersons: ({length, searchInput}: any) => Promise<void>;
+  @Action fetchPersons: ({ length, searchInput }: any) => Promise<void>;
   @Action addPerson: (person: any) => Promise<void>;
   @Action updatePerson: (person: any) => Promise<void>;
   @Action deletePerson: (id: number) => Promise<void>;
@@ -57,19 +57,26 @@ export default class Home extends Vue {
   private inputChange = debounce(this.search, 1000);
 
   mounted() {
-    if(this.$route.query.search) {
-      this.searchInput = this.$route.query.search as string;
+    let { search, page } = this.$route.query as any;
+    if (search) {
+      this.searchInput = search;
+    }
+    if (page && !isNaN(page)) {
+      this.currentPage = parseInt(page);
     }
     this.load();
   }
 
   private search() {
     this.currentPage = 1;
-    this.$router.replace({ name: "home", query: {search: this.searchInput} });
     this.load();
   }
 
   private load() {
+    if ((this.$route.query.search as string) != this.searchInput || (this.$route.query.page as string) != this.currentPage.toString()) {
+      this.$router.replace({ name: "home", query: { page: this.currentPage.toString(), search: this.searchInput } });
+    }
+
     this.fetchPersons({ length: (this.currentPage - 1) * 10, searchInput: this.searchInput });
   }
 
@@ -83,7 +90,7 @@ export default class Home extends Vue {
   private edit(row) {
     this.formDialog = {
       visible: true,
-      data: {...row}
+      data: { ...row }
     };
   }
 
@@ -95,9 +102,9 @@ export default class Home extends Vue {
   }
 
   private save() {
-    (this.$refs['form'] as any).validate(async (valid)=> {
+    (this.$refs['form'] as any).validate(async (valid) => {
       if (valid) {
-        if(this.formDialog.data.id) {
+        if (this.formDialog.data.id) {
           this.updatePerson(this.formDialog.data);
         } else {
           this.addPerson(this.formDialog.data);
@@ -117,10 +124,10 @@ export default class Home extends Vue {
       type: 'warning'
     }).then(() => {
       this.deletePerson(id).then(_ => {
-        if(this.persons.next) {
+        if (this.persons.next) {
           this.load();
         }
-        if(this.persons.results.length == 0 && this.persons.count > 0) {
+        if (this.persons.results.length == 0 && this.persons.count > 0) {
           this.currentPage--;
           this.load();
         }
@@ -129,8 +136,8 @@ export default class Home extends Vue {
       this.$message({
         type: 'info',
         message: 'Delete canceled'
-      });          
-    }); 
+      });
+    });
   }
 
 }
